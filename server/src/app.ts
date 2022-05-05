@@ -5,10 +5,9 @@ import cookieParser from 'cookie-parser'
 import logger from 'morgan'
 
 
-const indexRouter = require ("./routes/index")
-const usersRouter = require ("./routes/users")
+import router from "./routes/index";
 
-var app = express();
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -20,8 +19,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/', router);
 
 // catch 404 and forward to error handler
 app.use(function(req:Request, res:Response, next:NextFunction) {
@@ -29,7 +27,7 @@ app.use(function(req:Request, res:Response, next:NextFunction) {
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function(err: createError.HttpError, req: Request, res: Response) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
