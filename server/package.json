@@ -3,9 +3,14 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www",
+    "start": "node ./bin/www",
     "build": "tsc --watch",
-    "lint": "eslint . --ext .ts"
+    "db": "ts-node src/db/postgres.ts",
+    "dev": "tsnd --respawn src/db/postgres.ts",
+    "docker": "docker-compose up",
+    "lint": "eslint . --ext .ts",
+    "migrate": "node-pg-migrate",
+    "sequelize": "sequelize --options-path=src/db/options.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -17,7 +22,11 @@
     "jade": "~1.11.0",
     "jsonwebtoken": "^8.5.1",
     "morgan": "~1.9.1",
-    "typescript": "^4.6.4"
+    "node-pg-migrate": "^6.2.1",
+    "pg": "^8.7.3",
+    "pg-hstore": "^2.3.4",
+    "postgres": "^3.1.0",
+    "sequelize": "^6.19.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
@@ -31,7 +40,11 @@
     "@typescript-eslint/parser": "^5.22.0",
     "eslint": "^8.14.0",
     "husky": "^7.0.4",
-    "nodemon": "^2.0.16"
+    "nodemon": "^2.0.16",
+    "sequelize-cli": "^6.4.1",
+    "ts-node": "^10.7.0",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.6.4"
   },
   "husky": {
     "hooks": {

@@ -1,10 +1,8 @@
-import createError from 'http-errors'
-import express, {Request, Response, NextFunction} from 'express'
+import createError from 'http-errors';
+import express, {Request, Response, NextFunction} from 'express';
 import path from 'path';
-import cookieParser from 'cookie-parser'
-import logger from 'morgan'
-
-
+import cookieParser from 'cookie-parser';
+import logger from 'morgan';
 import router from "./routes/index";
 
 const app = express();
