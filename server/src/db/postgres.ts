@@ -1,7 +1,3 @@
-// import postgres from 'postgres';
-// import 'dotenv/config';
-// import sql from './models/postgres';
-// const db = require('./db/models');
 import db from './models';
 import { users } from './seeders/users';
 
@@ -17,10 +13,3 @@ const createUsers = () => {
     db.User.create(user);
   });
 }
-
-/*
-const databasePath = String(process.env.DATABASE_URL);
-const sql = postgres(databasePath);
-
-export default sql;
-*/

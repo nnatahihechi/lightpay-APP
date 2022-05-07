@@ -29,11 +29,6 @@ module.exports = (sequelize: any, DataTypes: any) => {
     status!: Boolean;
     blocked!: Boolean;
     resetToken!: string;
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
 
     static associate(models: any) {
       // define association here
@@ -42,7 +37,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
   User.init({
     email: {
       type: DataTypes.STRING,
-      primaryKey: true,
+      // primaryKey: true,
       unique: true,
       allowNull: false
     },
@@ -59,11 +54,11 @@ module.exports = (sequelize: any, DataTypes: any) => {
       allowNull: false
     },
     createdAt: {
-      type: DataTypes.DATE, //TIMESTAMP WITH TIME ZONE for postgres
+      type: DataTypes.DATE,
       defaultValue: DataTypes.NOW
     },
     updatedAt: {
-      type: DataTypes.DATE, //TIMESTAMP WITH TIME ZONE for postgres
+      type: DataTypes.DATE,
       defaultValue: DataTypes.NOW
     },
     verifyToken: {
