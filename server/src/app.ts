@@ -1,9 +1,11 @@
 import createError from 'http-errors';
-import express, {Request, Response, NextFunction} from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
-import router from "./routes/index";
+import router from './routes/index';
+
+require('dotenv').config();
 
 const app = express();
 
@@ -20,12 +22,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', router);
 
 // catch 404 and forward to error handler
-app.use(function(req:Request, res:Response, next:NextFunction) {
+app.use(function (req: Request, res: Response, next: NextFunction) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err: createError.HttpError, req: Request, res: Response) {
+app.use(function (err: createError.HttpError, req: Request, res: Response) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -34,6 +36,5 @@ app.use(function(err: createError.HttpError, req: Request, res: Response) {
   res.status(err.status || 500);
   res.render('error');
 });
-
 
 export default app;
