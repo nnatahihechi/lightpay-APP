@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { token } from "../services/generateToken";
 import { sendEmail } from "../controllers/sendEmail";
-import client from "../db/connection";
+import pool from "../db/connection";
 import { passLink } from "../services/resetPasswordTemp";
 interface UserData {
   email: string;
@@ -12,7 +12,7 @@ async function forgotPassword(req: Request, res: Response) {
 
   try {
     const email = userData.email;
-    const targetUser = await client.query(
+    const targetUser = await pool.query(
       `SELECT * FROM "Users" WHERE "email" = $1`,
       [email]
     );
@@ -27,7 +27,7 @@ async function forgotPassword(req: Request, res: Response) {
       };
 
       let getToken = token({ ...payload });
-      client.query(`UPDATE "Users" SET "resetToken" = $1 WHERE "email" = $2`, [
+      pool.query(`UPDATE "Users" SET "resetToken" = $1 WHERE "email" = $2`, [
         getToken,
         email,
       ]);

@@ -1,15 +1,17 @@
 import { Request, Response, NextFunction } from 'express';
 import hashPassword from '../auth/encrypt';
-import client from '../db/connection';
+import pool from '../db/connection';
 
-client.connect();
-
+// Register User
 const registerUser = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const { email, fullname, mobile, password } = req.body;
+  const email = req.body.email;
+  const fullname = req.body.fullname;
+  const mobile = req.body.mobile;
+  const password = req.body.password;
 
   try {
     const hashedPassword = await hashPassword(password);
@@ -19,22 +21,17 @@ const registerUser = async (
       mobile,
       password: hashedPassword,
     });
+
     let insertQuery = `INSERT into "Users"(email, fullname, mobile, password)
-                        values('${email}', '${fullname}', '${mobile}', '${hashedPassword}')
+                        VALUES('${email}', '${fullname}', '${mobile}','${hashedPassword}')
     `;
 
-    client.query(insertQuery, (err: any, result: any) => {
+    pool.query(insertQuery, (err: any, result: any) => {
       if (!err) {
-        res.status(201).json({
-          email,
-          fullname,
-          mobile,
-          password: hashedPassword,
-        });
+        res.status(201).send({ message: 'Successful!' });
       } else {
-        res.status(500).send('User already exist with this email ');
+        res.status(500).send({ message: 'User already exist with this email' });
       }
-      client.end;
     });
   } catch (err) {
     next(err);
