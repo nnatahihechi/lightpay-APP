@@ -12,6 +12,7 @@ async function forgotPassword(req: Request, res: Response) {
 
   try {
     const email = userData.email;
+    console.log(email);
     const targetUser = await pool.query(
       `SELECT * FROM "Users" WHERE "email" = $1`,
       [email]
@@ -32,21 +33,22 @@ async function forgotPassword(req: Request, res: Response) {
         email,
       ]);
 
-      const link = `http://localhost:3000/reset-password/${getToken}`;
+      const link = `http://localhost:3000/reset-password?resetToken=${getToken}`;
+      
       const formattedEmail = passLink(user.fullname.split(' ')[0], link);
 
       await sendEmail(email, "Reset your LightPay Password", formattedEmail);
       return res
         .status(200)
         .json({
-          message: "Click the reset link in your email to reset your password.",
+          message: "Please check your email to proceed with resetting your LightPay password."
         });
     } else {
-      res.status(404).json({ message: "Invalid user email." });
+      res.status(403).json({ message: "No account was found for email provided." });
     }
   } catch (err: any) {
     console.error(err.message);
-    res.send();
+    res.json({msg: err.message});
   }
 }
 

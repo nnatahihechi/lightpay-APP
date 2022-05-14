@@ -1,38 +1,50 @@
 import { Request, Response, NextFunction } from 'express';
 import hashPassword from '../auth/encrypt';
 import pool from '../db/connection';
+import { sendEmail } from '../utils/sendEmail';
+import {token} from "../sha256Encode";
+import {passLink} from '../services/verifyEmailTemplate';
 
-// Register User
+
 const registerUser = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const email = req.body.email;
-  const fullname = req.body.fullname;
-  const mobile = req.body.mobile;
-  const password = req.body.password;
+  const { email, fullname, mobile, password } = req.body;
 
   try {
     const hashedPassword = await hashPassword(password);
-    console.log({
-      email,
-      fullname,
-      mobile,
-      password: hashedPassword,
-    });
+    // console.log({
+    //   email,
+    //   fullname,
+    //   mobile,
+    //   password: hashedPassword,
+    // });
 
-    let insertQuery = `INSERT into "Users"(email, fullname, mobile, password)
-                        VALUES('${email}', '${fullname}', '${mobile}','${hashedPassword}')
+    const newToken = token({email, fullname, currentDate: new Date()});
+
+    let insertQuery = `INSERT into "Users"(email, fullname, mobile, password, "createdAt", "updatedAt", "verifyToken")
+                        values('${email}', '${fullname}', '${mobile}', '${hashedPassword}', (to_timestamp(${Date.now()} / 1000.0)), (to_timestamp(${Date.now()} / 1000.0)), '${newToken}')
     `;
 
     pool.query(insertQuery, (err: any, result: any) => {
       if (!err) {
-        res.status(201).send({ message: 'Successful!' });
+        const link = `http://localhost:3001/auth/verify-email/${newToken}`;
+        
+        const verifiedEmail = passLink(fullname.split(' ')[0], link);
+
+        sendEmail(email, "Verify your LightPay Email", verifiedEmail);
+        
+        res.status(201).json({
+          msg: "Registration Successful. Check your email to verify your account."
+        });
+
       } else {
-        res.status(500).send({ message: 'User already exist with this email' });
+        res.status(500).send("An account already exists with this email. Please login.");
       }
     });
+
   } catch (err) {
     next(err);
   }

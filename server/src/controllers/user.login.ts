@@ -1,32 +1,46 @@
-import { Request, Response, NextFunction } from 'express';
-import { JsonWebTokenError } from 'jsonwebtoken';
-import pool from '../db/connection';
-import jwt from 'jsonwebtoken';
+import { Request, Response, NextFunction } from "express";
+import { JsonWebTokenError } from "jsonwebtoken";
+import pool from "../db/connection";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 dotenv.config();
 
 // pool.connect();
 
 export const login = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
-  const query = `SELECT id,mobile,email FROM "Users" WHERE email='${email}' AND password='${password}'`;
+  let { email } = req.body;
+  let plainPassword = req.body.password;
 
-  pool.query(query, (err: any, result: any) => {
+  const checkPassQuery = `SELECT id, mobile, email, password, status FROM "Users" WHERE email='${email}'`;
+
+  pool.query(checkPassQuery, (err: any, result: any) => {
     if (!err) {
-      if (!result.rows[0]) return res.json({ msg: 'user does not exist' });
-      const { id, email, mobile } = result.rows[0];
-      const user = { id, email, mobile };
+      if (!result.rows[0]) {
+        console.log("User does not exist");
+        return res.json({ msg: "User does not exist" });
+      }
 
-      const user_secret = process.env.SECRET as string;
-      const token = jwt.sign(user, user_secret, { expiresIn: '180s' });
-      console.log(token);
-      res.status(200).send(token);
-    } else {
-      console.log(err);
-
-      res.status(500).send('User not found ');
-    }
+      const { id, email, mobile, password } = result.rows[0];
+      if (bcrypt.compareSync(plainPassword, password)) {
+        if (result.rows[0].status) {
+          // console.log("Login successful.");
+          const user = { id, email, mobile };
+          const user_secret = process.env.SECRET as string;
+          const token = jwt.sign(user, user_secret, { expiresIn: "180s" });
+          console.log(token);
+          res.status(200).json({msg:"Login successful.", token});
+        } else {
+          // send verification email
+          res.status(200).json({msg: "Please verify your account."});
+        }
+      } else {
+        console.log("Sign in failed");
+        res.status(403).json({msg: "Invalid credentials."});
+      }
+      }
     pool.end;
   });
+
 };
