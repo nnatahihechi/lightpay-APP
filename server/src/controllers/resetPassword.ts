@@ -22,10 +22,11 @@ const resetPassword = async (req: Request, res: Response, next: NextFunction) =>
         `UPDATE "Users" SET "password" = $1, "resetToken" = $2 WHERE "resetToken" = $3`,
         [hashedPassword, null, resetToken]
       );
-      res.status(200).send("Password updated.");
-      // nextFunction calls login page
+      res.status(200).send("Password updated successfully.");
+
     } else {
-      res.status(403).send("Couldn't find your LightPay account.");
+      console.log("Password reset link has expired.");
+      res.status(403).send("Password reset link has expired.");
     }
   } catch (err: any) {
     console.error(err.message);

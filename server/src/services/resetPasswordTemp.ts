@@ -9,17 +9,20 @@ export const passLink = (name: string, link: string) => {
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
   />
       <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
-  <head> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> </head>
+  
+      <head> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> </head>
   <div class="btnContainer" style=" padding:1rem;text-align: center;border-radius: 25px;" ><img style= "margin: auto; width:80%;
   height: 90%; display:block;border-radius: 25px; ";
       class="imgClass"
       src=https://res.cloudinary.com/brosj/image/upload/v1652113202/LightPay_zcdcdd.jpg
     /></div>
-  <p style = " margin: auto; padding:2rem;text-align: center; font-family: 'Lato'; font-size:18px";  >Hi ${name}, <br>Click the button below to reset your password</p> 
-  <div class="btnContainer" style="padding:0 100px; "><a href='${link}'><button class="btn" style=" background-color: #01051A; cursor: pointer; border: none; border-radius: 8px; margin-top:
-  6rem; color: white; padding: 15px 32px; text-align: center;
-  text-decoration: none; display:block; font-size: 16px; margin:auto; width: 35%;" >Reset Password</button></a>
+  
+    <p style = " margin: auto; padding:2rem;text-align: center; font-family: 'Lato'; font-size:18px";  >Hi ${name}, <br>Click the button below to reset your password</p> 
+  <div class="btnContainer" style="padding:0 100px; "><a href='${link}'style=" text-decoration: none; cursor: pointer; background-color: #01051A; border: none; border-radius: 8px; 
+  margin-top: 6rem; color: white; padding: 15px 32px; text-align: center;  
+  display:block; font-size: 16px; margin:auto; width: 55%;" >Reset Password</a>
   </div>
+  
   <div> <p style=" text-align: center;font-family: 'Lato';" >Copyright &copy; 2022 LightPay, Inc</p>
   </div>
   </div>

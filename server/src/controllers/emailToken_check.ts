@@ -15,11 +15,12 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
 
     if (verifiedToken) {
       pool.query(
-        `UPDATE Users SET "status" = $1, "emailVerifiedDate" = $2, "verifyToken" = $3 WHERE "verifyToken" = $4`,
-        [true, Date.now(), null, emailToken]
+        `UPDATE "Users" SET "status" = true, "emailVerifiedDate" = (to_timestamp(${Date.now()} / 1000.0)), "verifyToken" = null WHERE "verifyToken" = '${emailToken}'`
       );
+      console.log("User's email is verified.")
       res.status(200).send("User's email is verified.");
     } else {
+      console.log("forbidden!");
       res.status(403).send("forbidden!");
     }
   } catch (err: any) {

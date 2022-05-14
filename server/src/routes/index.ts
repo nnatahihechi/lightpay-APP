@@ -1,7 +1,10 @@
 import express from 'express';
 import userValidate from '../middlewares/user.validate';
 import registerUser from '../controllers/user.controller';
-import { login } from '../controllers/user.login'
+import forgotPassword from '../controllers/forgotPassword';
+import resetPassword from '../controllers/resetPassword';
+import verifyToken from '../controllers/emailToken_check';
+import { login } from '../controllers/user.login';
 
 const router = express.Router();
 
@@ -12,6 +15,18 @@ router.get('/', function (req, res) {
 
 /* Registration page. */
 router.post('/auth/register', userValidate, registerUser);
-router.post('/login',login)
+
+/* Verify email */
+router.post('/auth/verify-email/:verifyToken', verifyToken);
+
+/* Login */
+router.post('/login', login);
+
+/* Forgot password */
+router.post('/auth/forgot-password', forgotPassword);
+
+/* Reset password */
+router.post('/auth/reset-password/:resetToken', resetPassword);
+
 
 export default router;
