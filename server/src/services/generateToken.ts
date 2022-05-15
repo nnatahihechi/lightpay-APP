@@ -9,12 +9,18 @@ export interface Payload {
 }
 
 const token = (details: Payload) => {
-  return createHash("sha256").update(details.email).digest("hex");
+  return createHash("sha256")
+    .update(
+      details.email +
+      details.fullname +
+      details.phone +
+      details.date
+    )
+    .digest("hex");
 };
 
 const comparePasswords = (plainText: string, hash: string) => {
   return bcrypt.compare(plainText, hash);
 };
-
 
 export { token, comparePasswords };
