@@ -30,7 +30,7 @@ const registerUser = async (
 
     pool.query(insertQuery, (err: any, result: any) => {
       if (!err) {
-        const link = `http://localhost:3001/auth/verify-email/${newToken}`;
+        const link = `http://localhost:3000/auth/verify-email/?verifyToken=${newToken}`;
         
         const verifiedEmail = passLink(fullname.split(' ')[0], link);
 

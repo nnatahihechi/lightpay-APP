@@ -1,10 +1,11 @@
-import { Request, Response, NextFunction } from "express";
-import { JsonWebTokenError } from "jsonwebtoken";
+import { Request, Response } from "express";
 import pool from "../db/connection";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-
+import { sendEmail } from '../utils/sendEmail';
+import {passLink} from '../services/verifyEmailTemplate';
 import dotenv from "dotenv";
+
 dotenv.config();
 
 // pool.connect();
@@ -13,7 +14,7 @@ export const login = async (req: Request, res: Response) => {
   let { email } = req.body;
   let plainPassword = req.body.password;
 
-  const checkPassQuery = `SELECT id, mobile, email, password, status FROM "Users" WHERE email='${email}'`;
+  const checkPassQuery = `SELECT id, mobile, email, fullname, password, status, "verifyToken" FROM "Users" WHERE email='${email}'`;
 
   pool.query(checkPassQuery, (err: any, result: any) => {
     if (!err) {
@@ -22,7 +23,7 @@ export const login = async (req: Request, res: Response) => {
         return res.json({ msg: "User does not exist" });
       }
 
-      const { id, email, mobile, password } = result.rows[0];
+      const { id, email, fullname, mobile, password, verifyToken } = result.rows[0];
       if (bcrypt.compareSync(plainPassword, password)) {
         if (result.rows[0].status) {
           // console.log("Login successful.");
@@ -33,7 +34,10 @@ export const login = async (req: Request, res: Response) => {
           res.status(200).json({msg:"Login successful.", token});
         } else {
           // send verification email
-          res.status(200).json({msg: "Please verify your account."});
+          const link = `http://localhost:3000/auth/verify-email/?verifyToken=${verifyToken}`;
+          const verifiedEmail = passLink(fullname.split(" ")[0], link);
+          sendEmail(email, "Verify your LightPay Email", verifiedEmail);
+          res.status(200).json({msg: "Account not verified. Please check your email to verify your account."});
         }
       } else {
         console.log("Sign in failed");

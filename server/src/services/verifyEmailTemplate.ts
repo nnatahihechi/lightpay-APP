@@ -20,51 +20,39 @@ export const passLink = (name: string, link: string) => {
     <h2 style = " margin: auto; padding:2rem;text-align: center; font-family: 'Lato';"  >Hi ${name}, <br>Activate your account to start your crypto
     journey on LightPay.</h2>
 
-  <div class="btnContainer" style="padding:0 100px; "><a href='${link}'style=" text-decoration: none; cursor: pointer; background-color: #01051A; border: none; border-radius: 8px; 
-  margin-top: 6rem; color: white; padding: 15px 32px; text-align: center;  
-  display:block; font-size: 16px; margin:auto; width: 55%;" >Activate your account</a>
+  <div class="btnContainer" ><a href='${link}'style=" text-decoration: none; cursor: pointer; background-color: #01051A; border: none; border-radius: 8px; 
+  margin-top: 6rem; color: white; padding: 15px; text-align: center;  
+  display:block; font-size: 16px; margin:auto; width: 250px; min-width: 250px;" >Activate your account</a> <br></br>
   </div>
   
-  <h3  style="font-family: 'Lato'; padding:2rem;text-align: center;">Once active, your account is the gateway to our
-    universe of crypto assets and services that help you build your
-    financial freedom.Link not working? Access lightPay and enter the
-    activation code:</h3>
   
-    <hr class="horizonal-line" />
+  <hr class="horizonal-line" />
   
-    <p style="padding:2rem; font-family: 'Lato';">What next?</p>
-  <div class="second-section" style=" display: flex; flex-direction: row; padding:
-  2rem; width: 90%; ">
-    <div>
-      <h3 style ="font-family: 'Lato';">Verify your identity to access more features It's easy, secure and
-        faster than you might think. Once verified, you can buy and sell
-        crypto and use multiple payment methods.Get verified from your
-        lightPay account.
-      </h3>
-    </div>
-  </div>
+  <p style="padding:1rem 2rem; font-family: 'Lato';">What's next?</p>
+  <h3  style="font-family: 'Lato'; padding:0rem 2rem;text-align: center;">Once active, your account is the gateway to our
+    universe of crypto assets and services that help you build your financial freedom.</h3>
+  <h3  style="font-family: 'Lato'; padding:0rem 2rem;text-align: center;">Verify your identity to access more features. It's easy, secure and
+  faster than you might think. Once verified, you can buy and sell crypto and use multiple payment methods.</h3><br></br>
+
 
   <hr class="horizonal-line" />
   
   <div class="third-section" style=" display: flex;
   flex-direction: row; padding: 2rem;font-family: 'Lato'; ">
     <div>
-      <h3  style="font-family: 'Lato';">Payment Method</h3>
-      <p>Explore our diverse assets, with more added regularly</p>
+      <p>Explore our diverse assets, with more added regularly.</p>
     </div>
     <div>
-      <h3 style="font-family: 'Lato';">Payment Method</h3>
-      <p style="font-family: 'Lato';">Get Bitcoin, ETH or Doge using your local currency</p>
+      <p style="font-family: 'Lato';">Get Bitcoin, ETH or Doge using your local currency.</p>
     </div>
     <div>
-      <h3 style="font-family: 'Lato';">Payment Method</h3>
-      <p style="font-family: 'Lato';">Master the space with our sharp Crypto Guides
+      <p style="font-family: 'Lato';">Master the space with our sharp crypto guides.
       </p>
     </div>
   </div>
   </div>
 
-  <div> <p style=" text-align: center;font-family: 'Lato';" >Copyright &copy; 2022 LightPay, Inc</p>
+  <div> <p style=" text-align: center;font-family: 'Lato';" >Copyright &copy; 2022 LightPay, Inc.</p>
   </div>
   </div>
   `;
