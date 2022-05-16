@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import pool from "../db/connection";
 
-// pool.connect();
 
 const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
   try {
