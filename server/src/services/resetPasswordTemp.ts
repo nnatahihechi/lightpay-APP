@@ -17,13 +17,13 @@ export const passLink = (name: string, link: string) => {
       src=https://res.cloudinary.com/brosj/image/upload/v1652113202/LightPay_zcdcdd.jpg
     /></div>
   
-    <p style = " margin: auto; padding:2rem;text-align: center; font-family: 'Lato'; font-size:18px";  >Hi ${name}, <br>Click the button below to reset your password</p> 
-  <div class="btnContainer" style="padding:0 100px; "><a href='${link}'style=" text-decoration: none; cursor: pointer; background-color: #01051A; border: none; border-radius: 8px; 
-  margin-top: 6rem; color: white; padding: 15px 32px; text-align: center;  
-  display:block; font-size: 16px; margin:auto; width: 55%;" >Reset Password</a>
+    <p style = " margin: auto; padding:2rem;text-align: center; font-family: 'Lato'; font-size:18px";  >Hi ${name}, <br>Click the button below to reset your password.</p> 
+  <div class="btnContainer" ><a href='${link}'style=" text-decoration: none; cursor: pointer; background-color: #01051A; border: none; border-radius: 8px; 
+  margin-top: 6rem; color: white; padding: 15px; text-align: center;  
+  display:block; font-size: 16px; margin:auto; width: 250px; min-width: 250px;" >Reset Password</a>
   </div>
   
-  <div> <p style=" text-align: center;font-family: 'Lato';" >Copyright &copy; 2022 LightPay, Inc</p>
+  <div> <p style=" text-align: center;font-family: 'Lato';" >Copyright &copy; 2022 LightPay, Inc.</p>
   </div>
   </div>
   `;
