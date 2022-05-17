@@ -8,7 +8,6 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-// pool.connect();
 
 export const login = async (req: Request, res: Response) => {
   let { email } = req.body;
