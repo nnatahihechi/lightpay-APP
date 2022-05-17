@@ -9,7 +9,7 @@
     "dev": "tsnd --respawn src/db/postgres.ts",
     "docker": "docker-compose up",
     "lint": "eslint . --ext .ts",
-    "migrate": "npx sequelize-cli db:migrate",
+    "migrate": "node-pg-migrate",
     "sequelize": "sequelize --options-path=src/db/options.js",
     "test": "jest --forceExit"
   },
