@@ -4,8 +4,8 @@ import registerUser from '../controllers/user.controller';
 import forgotPassword from '../controllers/forgotPassword';
 import resetPassword from '../controllers/resetPassword';
 import verifyToken from '../controllers/emailToken_check';
+import getCryptoWallets from '../controllers/wallets.controller';
 import { login } from '../controllers/user.login';
-
 const router = express.Router();
 
 /* GET home page. */
@@ -28,5 +28,7 @@ router.post('/auth/forgot-password', forgotPassword);
 /* Reset password */
 router.post('/auth/reset-password/:resetToken', resetPassword);
 
+/* Get all wallets */
+router.get('/wallets', getCryptoWallets);
 
 export default router;
