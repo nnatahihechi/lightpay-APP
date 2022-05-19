@@ -28,5 +28,7 @@ router.post('/auth/forgot-password', forgotPassword);
 /* Reset password */
 router.post('/auth/reset-password/:resetToken', resetPassword);
 
+/* Create wallet */
+// router.post('/auth/create-wallet/:verifyToken', createAccount);
 
 export default router;
