@@ -18,10 +18,11 @@ module.exports = (sequelize: any, DataTypes: any) => {
 
     static associate(models: any) {
       // define association here
-      // Wallet.belongsTo(models.User)
+      Wallet.belongsTo(models.User)
     }
   }
   Wallet.init({
+   
     address: {
       type: DataTypes.STRING,
       primaryKey: true,

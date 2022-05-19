@@ -17,15 +17,18 @@ const registerUser = async (
 
     const newToken = token({ email, fullname, currentDate: new Date() });
 
-    let insertQuery = `INSERT into "Users" (email, fullname, mobile, password, "createdAt", "updatedAt", "verifyToken")
+  const insertQuery = `INSERT into "Users" (email, fullname, mobile, password, "createdAt", "updatedAt", "verifyToken")
                         values ('${email}', '${fullname}', '${mobile}', '${hashedPassword}', (to_timestamp(${Date.now()} / 1000.0)), (to_timestamp(${Date.now()} / 1000.0)), '${newToken}')
     `;
 
-    pool.query(insertQuery, (err: any, result: any) => {
+    // console.log(insertQuery)
+
+    pool.query(insertQuery, async (err: any, result: any) => {
       if (!err) {
         const link = `http://localhost:3000/auth/verify-email/?verifyToken=${newToken}`;
 
         const verifiedEmail = passLink(fullname.split(' ')[0], link);
+
 
         sendEmail(email, 'Verify your LightPay Email', verifiedEmail);
 
