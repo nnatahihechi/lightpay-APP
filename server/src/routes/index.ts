@@ -28,12 +28,10 @@ router.post('/auth/forgot-password', forgotPassword);
 /* Reset password */
 router.post('/auth/reset-password/:resetToken', resetPassword);
 
-<<<<<<< HEAD
 /* Create wallet */
 // router.post('/auth/create-wallet/:verifyToken', createAccount);
-=======
+
 /* Get all wallets */
 router.get('/wallets', getCryptoWallets);
->>>>>>> 0aedd7bbf504ea87198d05e25caf5839e98b336b
 
 export default router;
