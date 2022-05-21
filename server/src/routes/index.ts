@@ -5,6 +5,7 @@ import forgotPassword from '../controllers/forgotPassword';
 import resetPassword from '../controllers/resetPassword';
 import verifyToken from '../controllers/emailToken_check';
 import { login } from '../controllers/user.login';
+// import getBalances from '../controllers/getBalances';
 
 const router = express.Router();
 
@@ -28,5 +29,7 @@ router.post('/auth/forgot-password', forgotPassword);
 /* Reset password */
 router.post('/auth/reset-password/:resetToken', resetPassword);
 
+// Get balances
+// router.get('wallet/:asset/balance', getBalances);
 
 export default router;
