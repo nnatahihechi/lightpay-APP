@@ -2,8 +2,6 @@ import { Request, Response, NextFunction } from 'express';
 import pool from "../db/connection";
 import hashPassword from '../auth/encrypt';
 
-// pool.connect();
-
 const resetPassword = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const resetUrl = req.url;

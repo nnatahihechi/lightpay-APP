@@ -6,8 +6,6 @@ interface userAttributes {
   mobile: string;
   fullname: string;
   password: string;
-  createdAt: Date;
-  updatedAt: Date;
   verifyToken: string;
   emailVerifiedDate: Date;
   status: Boolean;
@@ -22,8 +20,6 @@ module.exports = (sequelize: any, DataTypes: any) => {
     mobile!: string;
     fullname!: string;
     password!: string;
-    createdAt!: Date;
-    updatedAt!: Date;
     verifyToken!: string;
     emailVerifiedDate!: Date;
     status!: Boolean;
@@ -32,6 +28,13 @@ module.exports = (sequelize: any, DataTypes: any) => {
 
     static associate(models: any) {
       // define association here
+      User.hasMany(models.Wallet, {
+        sourceKey: 'id',
+        foreignKey: 'UserId',
+        as: 'Wallets'
+       });
+
+      //  models.Wallet.belongsTo(User);
     }
   }
   User.init({
@@ -52,14 +55,6 @@ module.exports = (sequelize: any, DataTypes: any) => {
     password: {
       type: DataTypes.STRING,
       allowNull: false
-    },
-    createdAt: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW
     },
     verifyToken: {
       type: DataTypes.STRING,

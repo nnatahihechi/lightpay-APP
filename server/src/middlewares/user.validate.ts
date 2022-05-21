@@ -3,9 +3,21 @@ import Joi from 'joi';
 const { joiPassword } = require('joi-password');
 
 const schema = Joi.object({
-  email: Joi.string().email().min(12).max(50).required(),
-  fullname: Joi.string().min(3).max(200).required(),
-  mobile: Joi.string().max(15).required(),
+  email: Joi.string()
+    .email()
+    .min(12)
+    .max(50)
+    .messages({ 'string.empty': 'Email cannot be empty' })
+    .required(),
+  fullname: Joi.string()
+    .min(3)
+    .max(200)
+    .messages({ 'string.empty': 'Fullname cannot be empty' })
+    .required(),
+  mobile: Joi.string()
+    .max(15)
+    .messages({ 'string.empty': 'Mobile cannot be empty' })
+    .required(),
   password: joiPassword
     .string()
     .min(8)
@@ -16,13 +28,15 @@ const schema = Joi.object({
     .minOfNumeric(1)
     .noWhiteSpaces()
     .messages({
+      'string.empty': 'Password cannot be empty',
       'string.min': 'Minimum of 8 characters',
       'string.max': 'Maximum of 100 characters',
-      'password.minOfUppercase': 'At least {#min} uppercase character',
-      'password.minOfSpecialCharacters': 'At least {#min} special character',
-      'password.minOfLowercase': 'At least {#min} lowercase character',
-      'password.minOfNumeric': 'At least {#min} numeric character',
-      'password.noWhiteSpaces': '{#label} should not contain white spaces',
+      'password.minOfUppercase': 'At least {#min} uppercase',
+      'password.minOfSpecialCharacters': 'At least {#min} symbol',
+      'password.minOfLowercase': 'At least {#min} lowercase',
+      'password.minOfNumeric': 'At least {#min} number',
+      'password.noWhiteSpaces':
+        'Password {Password} should not contain white spaces',
     })
     .required(),
 });

@@ -1,8 +1,8 @@
 
 import { Request, Response } from "express";
-import client from '../db/connection';
+import pool from '../db/connection';
 
-client.connect();
+pool.connect();
 
 export const   checkRegAuthForAccount
 = async (req: Request, res: Response) => {
@@ -11,7 +11,7 @@ export const   checkRegAuthForAccount
     
     let [email, password] = req.body;
 
-    const user = await client.query(
+    const user = await pool.query(
       `SELECT * FROM "Users" WHERE "email" = $1 AND "password" = $2`,
       [email, password]
     );

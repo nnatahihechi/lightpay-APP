@@ -5,10 +5,12 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import cors from 'cors';
 import router from './routes/index';
+// import {generateKeys} from './utils/encrypt';
 
 require('dotenv').config();
 
 const app = express();
+// generateKeys()
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
