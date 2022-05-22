@@ -14,10 +14,10 @@ export const createAccount = async (id: number, res: Response) => {
 
   let publicKey = account.address;
   let privateKey = account.privateKey;
-  let enPrivatekey = encryptData('public_key.pem', privateKey);
+  let enPrivateKey = encryptData('public_key.pem', privateKey);
 
   const query = `INSERT into "Wallets" ("address", private_key, coin, "UserId", "createdAt", "updatedAt") 
-                                values ('${publicKey}', '${enPrivatekey}', '${coin}', '${id}', (to_timestamp(${Date.now()} / 1000.0)), (to_timestamp(${Date.now()} / 1000.0)))`;
+                                values ('${publicKey}', '${enPrivateKey}', '${coin}', '${id}', (to_timestamp(${Date.now()} / 1000.0)), (to_timestamp(${Date.now()} / 1000.0)))`;
   pool.query(query, (err, result) => {
     if (!err) {
       // res.status(200).json();
