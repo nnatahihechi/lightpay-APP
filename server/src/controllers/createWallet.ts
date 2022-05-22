@@ -1,33 +1,32 @@
-import dotenv from "dotenv"
-import { Request, Response } from "express";
+import dotenv from 'dotenv';
+import { Request, Response } from 'express';
 import Web3 from 'web3';
-import pool from "../db/connection";
-import { encryptData } from "../utils/encrypt";
+import pool from '../db/connection';
+import { encryptData } from '../utils/encrypt';
 dotenv.config();
 
-
-export const createAccount = async (id: number, res: Response,) => {
+export const createAccount = async (id: number, res: Response) => {
   const web3 = new Web3(process.env.BSC_TESTNET_NODE!);
-  console.log("connection successful")
+  console.log('connection successful');
 
-  const account = web3.eth.accounts.create()
-  const coin = "ETH";
+  const account = web3.eth.accounts.create();
+  const coin = 'ETH';
 
-  let privateKey = account.privateKey
-  let publicKey = encryptData('public_key.pem', privateKey)
-
+  let publicKey = account.address;
+  let privateKey = account.privateKey;
+  let enPrivatekey = encryptData('public_key.pem', privateKey);
 
   const query = `INSERT into "Wallets" ("address", private_key, coin, "UserId", "createdAt", "updatedAt") 
-values ('${publicKey}', '${privateKey}', '${coin}', '${id}', (to_timestamp(${Date.now()} / 1000.0)), (to_timestamp(${Date.now()} / 1000.0)))`;
+                                values ('${publicKey}', '${enPrivatekey}', '${coin}', '${id}', (to_timestamp(${Date.now()} / 1000.0)), (to_timestamp(${Date.now()} / 1000.0)))`;
   pool.query(query, (err, result) => {
     if (!err) {
       // res.status(200).json();
       console.log(result.rows);
     } else {
-      console.log(err.message)
+      console.log(err.message);
       // res.status(409).json({ msg: "error occurred" });
-    };
+    }
   });
   return true;
   // })
-}
+};
