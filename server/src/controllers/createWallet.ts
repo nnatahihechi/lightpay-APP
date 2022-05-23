@@ -18,7 +18,7 @@ export const createAccount = async (id: number, res: Response,) => {
 
 
   const query = `INSERT into "Wallets" ("address", private_key, coin, "UserId", "createdAt", "updatedAt") 
-values ('${publicKey}', '${privateKey}', '${coin}', '${id}', (to_timestamp(${Date.now()} / 1000.0)), (to_timestamp(${Date.now()} / 1000.0)))`;
+  values ('${publicKey}', '${privateKey}', '${coin}', '${id}', (to_timestamp(${Date.now()} / 1000.0)), (to_timestamp(${Date.now()} / 1000.0)))`;
   pool.query(query, (err, result) => {
     if (!err) {
       // res.status(200).json();

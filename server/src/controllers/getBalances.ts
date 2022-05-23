@@ -1,14 +1,17 @@
+const web3 = require('web3');
 import dotenv from "dotenv";
 
 dotenv.config();
 
-const getBalances = async (req: Request | any, res: Response) => {
+export const getBalances = async (req: Request | any, res: Response) => {
 
-  let email = req.email;
+  let address = req.params;
 
   try {
 
-    const checkPassQuery = `SELECT id, mobile, email, fullname, password, status, "verifyToken" FROM "Users" WHERE email='${email}'`;
+    let balance = await web3.eth.getBalance(address)
+
+    balance = (balance/1000000000000000000)
 
   } catch (error: String | String[] | any) {
 
@@ -16,5 +19,3 @@ const getBalances = async (req: Request | any, res: Response) => {
 
   }
 }
-
-export default getBalances
