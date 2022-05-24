@@ -6,6 +6,7 @@ import resetPassword from '../controllers/resetPassword';
 import verifyToken from '../controllers/emailToken_check';
 import getCryptoWallets from '../controllers/wallets.controller';
 import { login } from '../controllers/user.login';
+const getBalance = require('../controllers/getBalances');
 const router = express.Router();
 
 /* GET home page. */
@@ -30,6 +31,9 @@ router.post('/auth/reset-password/:resetToken', resetPassword);
 
 /* Create wallet */
 // router.post('/auth/create-wallet/:verifyToken', createAccount);
+
+// Get wallet balance
+router.get('/wallet/{asset}/balance', getBalance);
 
 /* Get all wallets */
 router.get('/wallets', getCryptoWallets);
