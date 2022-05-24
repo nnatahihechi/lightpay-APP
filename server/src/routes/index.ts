@@ -7,14 +7,17 @@ import verifyToken from '../controllers/emailToken_check';
 import getCryptoWallets from '../controllers/wallets.controller';
 import { login } from '../controllers/user.login';
 const getBalance = require('../controllers/getBalances');
+import getUserWallet from '../controllers/getUserWallet';
+import Auth from '../middlewares/Auth';
+
 const router = express.Router();
 
-/* GET home page. */
+/* Home page */
 router.get('/', function (req, res) {
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: 'LightPay' });
 });
 
-/* Registration page. */
+/* Registration page */
 router.post('/auth/register', userValidate, registerUser);
 
 /* Verify email */
@@ -29,13 +32,14 @@ router.post('/auth/forgot-password', forgotPassword);
 /* Reset password */
 router.post('/auth/reset-password/:resetToken', resetPassword);
 
-/* Create wallet */
-// router.post('/auth/create-wallet/:verifyToken', createAccount);
-
-// Get wallet balance
+/* Get wallet balance */
 router.get('/wallet/{asset}/balance', getBalance);
 
 /* Get all wallets */
 router.get('/wallets', getCryptoWallets);
+
+/* Get all user's wallets */
+router.get('/userwallet', Auth, getUserWallet)
+
 
 export default router;
