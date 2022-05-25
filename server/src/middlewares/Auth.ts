@@ -1,25 +1,33 @@
 require('dotenv').config();
-import Jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 
 
-const Auth = (req: Request | any, res: Response, next: NextFunction) => {
-  const token: any = req.headers.authorization.token.split(' ')[1];
+const Auth = (req: Request, res: Response, next: NextFunction) => {
+  let token;
+  
+  if (req.headers.authorization && req.headers.authorization.startsWith("Bearer ")) {
+    token = req.headers.authorization.split(' ')[1];
+    
+    try {
+      // Using Config module to read token validities.
+      const decoded = jwt.verify(token, `${process.env.SECRET}`)
+      
+      req.user = decoded;
+  
+     
+    } catch (error) {
+     return res.status(400).json('Invalid token')
+    }
+
+  }
+ 
 
   if(!token) {
-    res.status(401).json('Access Denied, No Access Token Provided');
+    return res.status(401).json('Access Denied, No Access Token Provided');
   }
 
-  try {
-
-    // Using Config module to read token validities.
-    const decoded = Jwt.verify(token, process.env.PRIVATE_KEY!)
-    req.user = decoded;
-
-    next()
-  } catch (ex) {
-    res.status(400).json('Invalid token')
-  }
+  next()
 }
 
 export default Auth;
