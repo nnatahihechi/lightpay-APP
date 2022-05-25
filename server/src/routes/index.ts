@@ -33,7 +33,7 @@ router.post('/auth/forgot-password', forgotPassword);
 router.post('/auth/reset-password/:resetToken', resetPassword);
 
 /* Get wallet balance */
-router.get('/wallet/{asset}/balance', getBalance);
+// router.get('/wallet/{asset}/balance', getBalance);
 
 /* Get all wallets */
 router.get('/wallets', getCryptoWallets);
