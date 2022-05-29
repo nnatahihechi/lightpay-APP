@@ -2,7 +2,6 @@
 import { Model } from 'sequelize';
 
 interface walletAttributes {
-  // userId: string;
   address: string;
   private_key: string;
   coin: string;
@@ -10,7 +9,6 @@ interface walletAttributes {
 
 module.exports = (sequelize: any, DataTypes: any) => {
   class Wallet extends Model<walletAttributes> implements walletAttributes {
-    // userId!: string;
     address!: string;
     private_key!: string;
     coin!: string;
@@ -18,7 +16,9 @@ module.exports = (sequelize: any, DataTypes: any) => {
     static associate(models: any) {
       // define association here
       Wallet.belongsTo(models.User);
+
     }
+
   }
   Wallet.init(
     {
