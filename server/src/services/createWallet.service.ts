@@ -10,7 +10,7 @@ export const createAccount = async (id: number, res: Response) => {
   console.log('connection successful');
 
   const account = web3.eth.accounts.create();
-  const coin = 'ETH';
+  const coin = 'BNB';
 
   let publicKey = account.address;
   let privateKey = account.privateKey;

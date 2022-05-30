@@ -10,14 +10,14 @@ export const getBalances = async (req: Request | any, res: Response) => {
   const id = req.user.id;
   const coin = req.params.coin;
   const myWallet = await pool.query(
-    `SELECT address FROM "Wallets" WHERE "UserId"=${id} AND "coin"=${coin}`
+    `SELECT address FROM "Wallets" WHERE "UserId"=${id} AND "coin"="${coin}"`
   );
   const address = myWallet.rows[0].address;
   try {
 
     let balance = await web3.eth.getBalance(address)
-
-    balance = (balance/1000000000000000000)
+    let decimal = (process.env.BSC_TOKEN_DECIMAL! as unknown  as  number)
+    balance = balance/decimal;
     return res.status(200).json({
       balance
     })
