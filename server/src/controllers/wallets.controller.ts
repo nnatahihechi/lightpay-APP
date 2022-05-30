@@ -10,7 +10,7 @@ export const getBalances = async (req: Request | any, res: Response) => {
   const id = req.user.id;
   const coin = req.params.coin;
   const myWallet = await pool.query(
-    `SELECT address FROM "Wallets" WHERE "UserId"=${id} AND "coin"="${coin}"`
+    `SELECT address FROM "Wallets" WHERE UserId=${id} AND coin="${coin}"`
   );
   const address = myWallet.rows[0].address;
   try {
