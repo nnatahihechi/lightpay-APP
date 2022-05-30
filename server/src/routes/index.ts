@@ -27,7 +27,7 @@ router.post('/auth/forgot-password', forgotPassword);
 router.post('/auth/reset-password/:resetToken', resetPassword);
 
 /* Get wallet balance */
-router.get('/wallet/:coin/balance', getBalances);
+router.get('/wallet/:coin/balance', Auth, getBalances);
 
 /* Get all wallets */
 router.get('/wallets', getCryptoWallets);
