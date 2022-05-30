@@ -1,6 +1,7 @@
 'use strict';
 import { Model } from 'sequelize';
 
+
 interface userAttributes {
   email: string;
   mobile: string;
@@ -34,9 +35,16 @@ module.exports = (sequelize: any, DataTypes: any) => {
         as: 'Wallets'
        });
 
-      //  models.Wallet.belongsTo(User);
+      User.hasMany(models.Transaction, {
+        sourceKey: 'id',
+        foreignKey: 'UserId',
+        as: 'Transcations'
+      });
     }
+
+    
   }
+
   User.init({
     email: {
       type: DataTypes.STRING,
