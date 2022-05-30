@@ -7,8 +7,8 @@ import { passLink } from '../template/verifyEmail.template';
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
-import {createAccount} from "../services/createWallet.service";
 import hashPassword from '../utils/encrypt';
+import { createAccount } from '../services/wallet.service';
 interface UserData {
   email: string;
 }
@@ -159,12 +159,13 @@ export const verifyToken = async (req: Request, res: Response, next: NextFunctio
       );
       
       console.log("Account verified successfully.")
-      res.status(200).json({ msg: "Account verified successfully." });
+      return res.status(200).json({ msg: "Account verified successfully." });
     } else {
       console.log("forbidden!");
-      res.status(403).json({ msg: "Invalid verification link." });
+      return res.status(403).json({ msg: "Invalid verification link." });
     }
   } catch (err: any) {
+    return res.status(403).json({ msg: "Invalid verification link." });
     console.error(err.message);
   }
 };
