@@ -1,13 +1,7 @@
 import express from 'express';
 import userValidate from '../middlewares/user.validate';
-import registerUser from '../controllers/user.controller';
-import forgotPassword from '../controllers/forgotPassword';
-import resetPassword from '../controllers/resetPassword';
-import verifyToken from '../controllers/emailToken_check';
-import getCryptoWallets from '../controllers/wallets.controller';
-import { login } from '../controllers/user.login';
-const getBalance = require('../controllers/getBalances');
-import getUserWallet from '../controllers/getUserWallet';
+import {registerUser, login, resetPassword, verifyToken, forgotPassword} from '../controllers/user.controller';
+import {getCryptoWallets, getUserWallet, getBalances} from '../controllers/wallets.controller';
 import Auth from '../middlewares/Auth';
 
 const router = express.Router();
@@ -33,7 +27,7 @@ router.post('/auth/forgot-password', forgotPassword);
 router.post('/auth/reset-password/:resetToken', resetPassword);
 
 /* Get wallet balance */
-// router.get('/wallet/{asset}/balance', getBalance);
+router.get('/wallet/:coin/balance', getBalances);
 
 /* Get all wallets */
 router.get('/wallets', getCryptoWallets);
