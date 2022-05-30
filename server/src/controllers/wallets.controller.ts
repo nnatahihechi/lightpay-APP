@@ -7,24 +7,29 @@ import Web3 from 'web3';
 dotenv.config();
 
 export const getBalances = async (req: Request | any, res: Response) => {
-  const web3 = new Web3(process.env.BSC_TESTNET_NODE!)
-  const id = req.user.id;
-  const coin = req.params.coin;
-  const myWallet = await pool.query(
-    `SELECT address FROM "Wallets" WHERE "UserId"=${id} AND "coin"='${coin}'`
-  );
-  const address = myWallet.rows[0].address;
   try {
-
-    let balance:any = await web3.eth.getBalance(address);
-    let decimal = (process.env.BSC_TOKEN_DECIMAL! as unknown  as  number)
-    balance = (balance as unknown as number) /decimal;
+    const web3 = new Web3(process.env.BSC_TESTNET_NODE!)
+    const id = req.user.id;
+    const coin = req.params.coin;
+    const myWallet = await pool.query(
+      `SELECT address FROM "Wallets" WHERE "UserId"=${id} AND "coin"='${coin}'`
+    );
+    const address = myWallet.rows[0].address;
+    let balance: any = await web3.eth.getBalance(address);
+    let decimal = (process.env.BSC_TOKEN_DECIMAL! as unknown as number)
+    balance = (balance as unknown as number) / decimal;
     return res.status(200).json({
       balance
     })
   } catch (error: String | String[] | any) {
-
-    console.log(error.message)
+    if (error.message.includes(`(reading 'address')`)) {
+      return res.status(404).json({
+        message: "Unsupported Token"
+      })
+    }
+    return res.status(500).json({
+      message: "An Unexpected Error Occured"
+    });
 
   }
 }
@@ -43,9 +48,11 @@ export const getUserWallet = async (req: Request, res: Response) => {
       `SELECT address, coin FROM "Wallets" WHERE "UserId"=${id}`
     );
 
-    res.status(200).json(myWallet.rows);
+   return res.status(200).json(myWallet.rows);
   } catch (error: any) {
-    res.status(500).json(error);
     console.log(error.message);
+    return res.status(500).json({
+      message: "An Unexpected Error Occured"
+    });
   }
 };

@@ -18,7 +18,7 @@ router.post('/auth/register', userValidate, registerUser);
 router.post('/auth/verify-email/:verifyToken', verifyToken);
 
 /* Login */
-router.post('/login', login);
+router.post('/auth/login', login);
 
 /* Forgot password */
 router.post('/auth/forgot-password', forgotPassword);
@@ -27,13 +27,13 @@ router.post('/auth/forgot-password', forgotPassword);
 router.post('/auth/reset-password/:resetToken', resetPassword);
 
 /* Get wallet balance */
-router.get('/wallet/:coin/balance', Auth, getBalances);
+router.get('/wallets/:coin/balance', Auth, getBalances);
 
 /* Get all wallets */
 router.get('/wallets', getCryptoWallets);
 
 /* Get all user's wallets */
-router.get('/userwallet', Auth, getUserWallet)
+router.get('/wallets/userwallet', Auth, getUserWallet)
 
 
 export default router;
