@@ -1,7 +1,8 @@
 import express from 'express';
 import userValidate from '../middlewares/user.validate';
-import {registerUser, login, resetPassword, verifyToken, forgotPassword} from '../controllers/user.controller';
-import {getCryptoWallets, getUserWallet, getBalances} from '../controllers/wallets.controller';
+import { registerUser, login, resetPassword, verifyToken, forgotPassword } from '../controllers/user.controller';
+import { getCryptoWallets, getUserWallet, getBalances } from '../controllers/wallets.controller';
+import { getTransactions } from '../controllers/transactions.controller';
 import Auth from '../middlewares/Auth';
 
 const router = express.Router();
@@ -34,6 +35,11 @@ router.get('/wallets', getCryptoWallets);
 
 /* Get all user's wallets */
 router.get('/wallets/userwallet', Auth, getUserWallet)
+
+/* Get all transactions */
+router.get('/transactions', getTransactions);
+
+
 
 
 export default router;

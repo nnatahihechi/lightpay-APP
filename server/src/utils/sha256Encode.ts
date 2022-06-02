@@ -11,7 +11,7 @@ const token = (details: Payload) => {
     details.fullname +
     details.currentDate
   )
-  .digest("hex");;
+  .digest("hex");
 };
 const comparePasswords = (plainText: string, hash: string) => {
   return bcrypt.compare(plainText, hash);
