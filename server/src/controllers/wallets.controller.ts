@@ -41,6 +41,7 @@ export const getCryptoWallets = async (req: Request, res: Response) => {
     console.log(error.message);
   }
 };
+
 export const getUserWallet = async (req: Request, res: Response) => {
   const id = req.user.id;
   try {
