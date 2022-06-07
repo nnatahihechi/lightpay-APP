@@ -1,6 +1,6 @@
 import express from 'express';
 import userValidate from '../middlewares/user.validate';
-import { registerUser, login, resetPassword, verifyToken, forgotPassword } from '../controllers/user.controller';
+import { registerUser, login, resetPassword, verifyToken, forgotPassword, getUsername } from '../controllers/user.controller';
 import { getCryptoWallets, getUserWallet, getBalances } from '../controllers/wallets.controller';
 import { getTransactions } from '../controllers/transactions.controller';
 import Auth from '../middlewares/Auth';
@@ -21,6 +21,9 @@ router.post('/auth/verify-email/:verifyToken', verifyToken);
 /* Login */
 router.post('/auth/login', login);
 
+/* Get user's name */
+router.get('/auth/username', Auth, getUsername);
+
 /* Forgot password */
 router.post('/auth/forgot-password', forgotPassword);
 
@@ -37,9 +40,7 @@ router.get('/wallets', getCryptoWallets);
 router.get('/wallets/userwallet', Auth, getUserWallet)
 
 /* Get all transactions */
-router.get('/transactions', getTransactions);
-
-
+router.get('/transactions', Auth, getTransactions);
 
 
 export default router;

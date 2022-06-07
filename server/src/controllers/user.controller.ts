@@ -9,10 +9,6 @@ import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import hashPassword from '../utils/encrypt';
 import { createAccount } from '../services/wallet.service';
-interface UserData {
-  email: string;
-}
-// import axios from 'axios';
 
 dotenv.config();
 
@@ -36,19 +32,15 @@ export const registerUser = async (
                         values ('${email}', '${fullname}', '${mobile}', '${hashedPassword}', (to_timestamp(${Date.now()} / 1000.0)), (to_timestamp(${Date.now()} / 1000.0)), '${newToken}')
     `;
 
-    // console.log(insertQuery)
-
     pool.query(insertQuery, async (err: any, result: any) => {
       if (!err) {
         const link = `http://localhost:3000/auth/verify-email/?verifyToken=${newToken}`;
 
         const verifiedEmail = passLink(fullname.split(' ')[0], link);
-
-
         sendEmail(email, 'Verify your LightPay Email', verifiedEmail);
 
         res.status(201).json({
-          msg: 'Registration Successful. Check your email to verify your account.',
+          message: 'Registration Successful. Check your email to verify your account.',
         });
       } else {
         res
@@ -70,40 +62,66 @@ export const login = async (req: Request, res: Response) => {
   pool.query(checkPassQuery, (err: any, result: any) => {
     if (!err) {
       if (!result.rows[0]) {
-        console.log("User does not exist");
-        return res.json({ msg: "User does not exist" });
+        // console.log("User does not exist");
+        return res.json({ message: "Invalid credentials." });
       }
 
       const { id, email, fullname, mobile, password, verifyToken } =
         result.rows[0];
+
       if (bcrypt.compareSync(plainPassword, password)) {
         if (result.rows[0].status) {
           // console.log("Login successful.");
           const user = { id, email, mobile };
           const user_secret = process.env.SECRET as string;
           const token = jwt.sign(user, user_secret, { expiresIn: "1h" });
-          
 
           console.log(token);
           
-          res.status(200).json({ msg: "Login successful.", token });
+          res.status(200).json({ message: "Login successful.", token });
         } else {
-          // send verification email
+          // send verification email.
           const link = `http://localhost:3000/auth/verify-email/?verifyToken=${verifyToken}`;
           const verifiedEmail = passLink(fullname.split(" ")[0], link);
           sendEmail(email, "Verify your LightPay Email", verifiedEmail);
           res.status(200).json({
-            msg: "Account not verified. Please check your email to verify your account.",
+            message: "Account not verified. Please check your email to verify your account.",
           });
         }
       } else {
         console.log("Sign in failed");
-        res.status(403).json({ msg: "Invalid credentials." });
+        res.status(403).json({ message: "Invalid credentials." });
       }
     }
     pool.end;
   });
 };
+
+export const getUsername = async (req: Request, res: Response) => {
+  // console.log(req.user);
+  try {
+    const query = `SELECT fullname FROM "Users" WHERE id='${req.user.id}'`;
+
+    pool.query(query, (err: any, result: any) => {
+      if (!err) {
+        if (!result.rows[0]) {
+          return res.status(404).json({
+            message: "User not found."
+          });
+        }
+
+        return res.status(200).json({
+          username: result.rows[0].fullname
+        });
+      }
+    });
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(500).json({
+      message: "An Unexpected Error Occured.",
+    });
+  }
+}
 
 export const resetPassword = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -147,30 +165,24 @@ export const verifyToken = async (req: Request, res: Response, next: NextFunctio
     console.log(verifiedToken, "verified")
 
     const walletCreated: Boolean  = await createAccount(verifiedToken.rows[0].id, res)
-    // console.log(walletCreated, " wallet")
-
 
     if (walletCreated && verifiedToken.rows.length) {
       pool.query(
-  
         `UPDATE "Users" SET "status" = true, "emailVerifiedDate" = (to_timestamp(${Date.now()} / 1000.0)), "verifyToken" = null WHERE "verifyToken" = '${emailToken}'`
-       
-
       );
       
       console.log("Account verified successfully.")
-      return res.status(200).json({ msg: "Account verified successfully." });
+      return res.status(200).json({ message: "Account verified successfully." });
     } else {
       console.log("forbidden!");
-      return res.status(403).json({ msg: "Invalid verification link." });
+      return res.status(403).json({ message: "Invalid verification link." });
     }
   } catch (err: any) {
-    return res.status(403).json({ msg: "Invalid verification link." });
-    console.error(err.message);
+    return res.status(403).json({ message: "Invalid verification link." });
   }
 };
 
-export const forgotPassword= async (req: Request, res: Response)=>{
+export const forgotPassword = async (req: Request, res: Response)=>{
   let userData: UserData = req.body as unknown as UserData;
 
   try {
@@ -196,7 +208,7 @@ export const forgotPassword= async (req: Request, res: Response)=>{
         email,
       ]);
 
-      const link = `http://localhost:3000/reset-password?resetToken=${getToken}`;
+      const link = `http://localhost:3000/auth/reset-password?resetToken=${getToken}`;
       
       const formattedEmail = passLink(user.fullname.split(' ')[0], link);
 
@@ -211,6 +223,6 @@ export const forgotPassword= async (req: Request, res: Response)=>{
     }
   } catch (err: any) {
     console.error(err.message);
-    res.json({msg: err.message});
+    res.json({message: err.message});
   }
 }

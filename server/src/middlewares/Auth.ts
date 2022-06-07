@@ -15,19 +15,16 @@ const Auth = (req: Request, res: Response, next: NextFunction) => {
       
       req.user = decoded;
   
-     
     } catch (error) {
-     return res.status(400).json('Invalid token')
+     return res.status(400).json({message: 'Invalid token'});
     }
-
   }
  
-
   if(!token) {
-    return res.status(401).json('Access Denied, No Access Token Provided');
+    return res.status(401).json({message: 'Access Denied. No Access Token Provided.'});
   }
 
-  next()
+  next();
 }
 
 export default Auth;
