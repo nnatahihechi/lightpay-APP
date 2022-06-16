@@ -3,7 +3,8 @@ import pool from "../db/connection";
 const web3 = require("web3");
 import dotenv from "dotenv";
 import Web3 from "web3";
-import { decryptData } from "../utils/encrypt";
+import { decryptData, decryptData2 } from "../utils/encrypt";
+import { getNonce, saveTransaction } from "./transactions.controller";
 
 dotenv.config();
 
@@ -37,18 +38,29 @@ export const getBalances = async (req: Request | any, res: Response) => {
 };
 
 export const getCryptoWallets = async (req: Request, res: Response) => {
+  const id = req.user.id;
   try {
-    const allWallets = await pool.query(`SELECT address, coin FROM "Wallets"`);
-    return res.status(200).send(allWallets.rows);
+    const allWallets = await pool.query(
+      `SELECT address, coin FROM "Wallets" WHERE "UserId"=${id}`
+    );
+    let wallets = allWallets.rows;
+    wallets.forEach((wallet: any) => {
+      wallet.balance = 0;
+    });
+    return res.status(200).json(wallets);
   } catch (error: any) {
     console.log(error.message);
   }
 };
 
-export const getBalance2 = async (req: Request | any, res: Response, address: string) => {
+export const getBalance2 = async (
+  req: Request | any,
+  res: Response,
+  address: string
+) => {
   try {
     const web3 = new Web3(process.env.BSC_TESTNET_NODE!);
-    const id = req.user.id;
+    // const id = req.user.id;
     // const coin = req.params.coin;
     // const myWallet = await pool.query(
     //   `SELECT address FROM "Wallets" WHERE "UserId"=${id}`
@@ -59,6 +71,7 @@ export const getBalance2 = async (req: Request | any, res: Response, address: st
     balance = (balance as unknown as number) / decimal;
     return balance;
   } catch (error: String | String[] | any) {
+    console.log("Wallet with error:", address);
     if (error.message.includes(`(reading 'address')`)) {
       return res.status(404).json({
         message: "Unsupported Token",
@@ -83,7 +96,7 @@ export const getUserWallet = async (req: Request, res: Response) => {
 
     const wallets = myWallet.rows;
     // console.log(wallets);
-    
+
     const walletsWithBal = [];
     for (let i = 0; i < wallets.length; i++) {
       const coin = wallets[i].coin;
@@ -93,7 +106,7 @@ export const getUserWallet = async (req: Request, res: Response) => {
       walletsWithBal.push({
         address,
         coin,
-        balance
+        balance,
       });
     }
     // console.log("DEVELOPMENT\n", walletsWithBal)
@@ -103,7 +116,6 @@ export const getUserWallet = async (req: Request, res: Response) => {
      */
     return res.status(200).json(walletsWithBal);
     // return res.status(200).json(myWallet.rows);
-
   } catch (error: any) {
     console.log(error.message);
     // return res.status(500).json({
@@ -145,7 +157,6 @@ export const getUserWallet2 = async (req: Request, res: Response) => {
      */
     // return res.status(200).json(walletsWithBal);
     return res.status(200).json(myWallet.rows);
-
   } catch (error: any) {
     console.log(error.message);
     return res.status(500).json({
@@ -157,57 +168,77 @@ export const getUserWallet2 = async (req: Request, res: Response) => {
 export const transfer = async (req: Request, res: Response) => {
   const web3 = new Web3(process.env.BSC_TESTNET_NODE!);
   const { toAddress, amount, fromAddress } = req.body;
+
+  if (toAddress === "" || fromAddress === "" || amount === "") {
+    return res.status(400).json({ message: "Please complete all fields." });
+  }
+
   try {
     let data = await pool.query(
       `SELECT "private_key" FROM "Wallets" WHERE address='${fromAddress}'`
     );
 
-    let newdata = data.rows[0].private_key;
-    console.log(data.rows[0].private_key);
+    let encryptedPrivateKey = data.rows[0].private_key;
 
-    let keyLocation =
-      "/Users/okpalaanayo/Documents/weekly task/live-project-node-sq010-banking-app-lightpay/server/private_key.pem";
-
-    let privateKey = decryptData(keyLocation, newdata) as unknown as string;
+    let privateKey = decryptData(
+      "private_key.pem",
+      encryptedPrivateKey
+    ) as unknown as string;
 
     let weiamount = amount * parseInt(process.env.BSC_TOKEN_DECIMAL!);
     let balance = await web3.eth.getBalance(fromAddress);
+    console.log("from balance:", balance);
 
-    console.log(balance);
     if (weiamount < +balance * parseInt(process.env.BSC_TOKEN_DECIMAL!)) {
-      const nonce = await web3.eth.getTransactionCount(toAddress, "latest"); // nonce starts counting from 0
+      // const nonce = await web3.eth.getTransactionCount(toAddress, "latest"); // nonce starts counting from 0
+      const nonce = await getNonce(req, res);
 
       const gas = await web3.eth.estimateGas({
         to: toAddress,
         from: fromAddress,
-        value: amount,
+        value: weiamount,
         nonce,
       });
+
       const gasPrice = await web3.eth.getGasPrice();
+
       const signed: any = await web3.eth.accounts.signTransaction(
         {
           to: toAddress,
           from: fromAddress,
-          value: amount,
+          value: weiamount,
           gas,
           gasPrice,
           nonce,
         },
         privateKey
       );
+
       let txHash = await web3.eth.sendSignedTransaction(signed.rawTransaction);
+
+      console.log("fromAddress", fromAddress);
+      console.log("toAddress", toAddress);
+      console.log("amount", amount);
+      console.log("nonce", nonce);
+      console.log("gas", gas);
+      console.log("gasPrice", gasPrice);
+      console.log("signed", signed);
+      console.log("txHash", txHash);
+
+      const meta = JSON.stringify({nonce, gas, gasPrice, signed, txHash});
+      const txDeets = {fromAddress, toAddress, amount, meta, status: "Successful"};
+      saveTransaction(req, txDeets);
+
       return res.status(200).json({
         txHash,
-        message: `Transfer Of ${
-          amount / parseInt(process.env.BSC_TOKEN_DECIMAL!)
-        } BNB Successful`,
+        message: `Transfer of ${amount} BNB was successful.`,
       });
-    }
-    return res.status(403).json({
-      message: "Insufficient Balance",
-    });
+    } else
+      return res.status(403).json({
+        message: "Insufficient Balance",
+      });
   } catch (err) {
-    // res.status(500).json({message: 'something Happened'})
     console.log(err);
+    return res.status(500).json({ message: "An error occured." });
   }
 };

@@ -4,13 +4,24 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import cors from 'cors';
+import fs from "fs";
 import router from './routes/index';
 import {generateKeys} from './utils/encrypt';
 
 require('dotenv').config();
 
 const app = express();
-generateKeys()
+
+// Test the if the public_key.pem or private_key.pem files exist
+let public_key = "./public_key.pem";
+
+fs.access(public_key, fs.constants.F_OK, (err) => {
+  if (err) {
+    // If files don't exist, create the files.
+    generateKeys();
+  }
+});
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

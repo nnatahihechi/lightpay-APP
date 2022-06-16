@@ -37,22 +37,19 @@ export const decryptData = (keyLocation: string, data: any) => {
     const private_key = fs.readFileSync(keyLocation, "utf8");
     data = Buffer.from(data.toString("base64"), "base64");
     return crypto.privateDecrypt(private_key, data).toString("utf8");
-  } catch (error) {}
+  } catch (error) {
+    console.log("ERROR HERE", error);
+  }
 };
 
-export const decryptData2 = (keyLocation: string, data: any) => {
+export const decryptData2 = (keyloc: string, encrid: any) => {
   try {
-    const private_key = fs.readFileSync(keyLocation, "utf8");
-
-    let newData = Buffer.from(data, "base64");
-    let nprivate_key = {
-      key: private_key,
-      padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
-      oaepHash: "sha256",
-    };
-    return crypto.privateDecrypt(nprivate_key, newData).toString("base64");
+    const privateKey = fs.readFileSync(keyloc, "utf8");
+    const data = Buffer.from(encrid, "base64");
+    console.log(crypto.privateDecrypt(privateKey, data).toString());
+    return crypto.privateDecrypt(privateKey, data).toString();
   } catch (error) {
-    console.log(error);
+    console.log("decrypt3:" + error);
   }
 };
 

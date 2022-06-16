@@ -3,19 +3,19 @@ import { Model } from 'sequelize';
 
 interface transcationAttributes {
   amount: number;
-  To: string;
-  From: string;
-  Meta: string;
-  Status: string;
+  to: string;
+  from: string;
+  meta: string;
+  status: string;
 }
 
 module.exports = (sequelize: any, DataTypes: any) => {
   class Transaction extends Model<transcationAttributes> implements transcationAttributes {
     amount!: number
-    To!: string;
-    From!: string;
-    Meta!: string;
-    Status!: string
+    to!: string;
+    from!: string;
+    meta!: string;
+    status!: string
 
     static associate(models: any) {
     Transaction.belongsTo(models.User);
@@ -27,22 +27,22 @@ module.exports = (sequelize: any, DataTypes: any) => {
     .init(
       {
         amount: {
-          type: DataTypes.INTEGER(50),
+          type: DataTypes.DECIMAL(),
           allowNull: false,
         },
-        To: {
-          type: DataTypes.STRING(150),
-          allowNull: false,
-        },
-        From: {
+        to: {
           type: DataTypes.STRING,
           allowNull: false,
         },
-        Meta: {
+        from: {
           type: DataTypes.STRING,
           allowNull: false,
         },
-        Status: {
+        meta: {
+          type: DataTypes.STRING(2000),
+          allowNull: false,
+        },
+        status: {
           type: DataTypes.STRING,
           allowNull: false,
         },
