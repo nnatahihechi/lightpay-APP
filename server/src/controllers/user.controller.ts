@@ -4,6 +4,7 @@ import { sendEmail } from '../utils/sendEmail';
 import { token } from '../utils/sha256Encode';
 import {token as generateToken} from "../services/generateToken.service";
 import { passLink } from '../template/verifyEmail.template';
+import { passLink as resetLink } from '../template/resetPassword.template';
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
@@ -34,7 +35,7 @@ export const registerUser = async (
 
     pool.query(insertQuery, async (err: any, result: any) => {
       if (!err) {
-        const link = `http://localhost:3000/auth/verify-email/?verifyToken=${newToken}`;
+        const link = `http://localhost:3000/auth/verify-email?verifyToken=${newToken}`;
 
         const verifiedEmail = passLink(fullname.split(' ')[0], link);
         sendEmail(email, 'Verify your LightPay Email', verifiedEmail);
@@ -82,6 +83,9 @@ export const login = async (req: Request, res: Response) => {
         } else {
           // send verification email.
           const link = `http://localhost:3000/auth/verify-email/?verifyToken=${verifyToken}`;
+
+          console.log(link);
+
           const verifiedEmail = passLink(fullname.split(" ")[0], link);
           sendEmail(email, "Verify your LightPay Email", verifiedEmail);
           res.status(200).json({
@@ -210,7 +214,7 @@ export const forgotPassword = async (req: Request, res: Response)=>{
 
       const link = `http://localhost:3000/auth/reset-password?resetToken=${getToken}`;
       
-      const formattedEmail = passLink(user.fullname.split(' ')[0], link);
+      const formattedEmail = resetLink(user.fullname.split(' ')[0], link);
 
       await sendEmail(email, "Reset your LightPay Password", formattedEmail);
       return res
